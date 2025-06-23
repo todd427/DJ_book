@@ -1,0 +1,25 @@
+
+<h2>Search for books by author</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Search</button>
+</form>
+
+{% if books %}
+  <h3>Results</h3>
+  <ul>
+    {% for book in books %}
+      <li>
+        <strong>{{ book.title }}</strong> by {{ book.authors }}<br>
+        ISBN-10: {{ book.isbn_10 }}<br>
+        ISBN-13: {{ book.isbn_13 }}<br>
+        ASIN: {{ book.asin }}<br>
+        Source: {{ book.source }}<br>
+        {% if book.purchase_url %}
+          <a href="{{ book.purchase_url }}" target="_blank">Buy Now</a> ({{ book.price }})
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
