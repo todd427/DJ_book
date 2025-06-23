@@ -1,25 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Lookup</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+        }
+        .book-card:hover {
+            box-shadow: 0 8px 24px 0 rgba(44, 62, 80, 0.15);
+            border-left: 6px solid #009688;
+            transition: 0.2s;
+        }
+    </style>
+</head>
+<body class="w3-light-grey">
 
-<h2>Search for books by author</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Search</button>
-</form>
+    <!-- Header -->
+    <div class="w3-bar w3-teal w3-padding w3-large w3-center">
+        <span class="w3-bar-item"><i class="fa fa-book"></i> Book Lookup</span>
+    </div>
 
-{% if books %}
-  <h3>Results</h3>
-  <ul>
-    {% for book in books %}
-      <li>
-        <strong>{{ book.title }}</strong> by {{ book.authors }}<br>
-        ISBN-10: {{ book.isbn_10 }}<br>
-        ISBN-13: {{ book.isbn_13 }}<br>
-        ASIN: {{ book.asin }}<br>
-        Source: {{ book.source }}<br>
-        {% if book.purchase_url %}
-          <a href="{{ book.purchase_url }}" target="_blank">Buy Now</a> ({{ book.price }})
+    <div class="w3-container w3-margin-top" style="max-width:640px;">
+
+        <div class="w3-card w3-white w3-padding w3-margin-top w3-animate-opacity">
+            <h2 class="w3-center w3-text-teal"><i class="fa fa-search"></i> Search for Books by Author</h2>
+            <form method="post" class="w3-container w3-margin-bottom">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="w3-btn w3-teal w3-round-large w3-margin-top w3-block w3-hover-shadow">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+
+        {% if books %}
+            <div class="w3-container w3-margin-top">
+                <h3 class="w3-text-teal w3-border-bottom w3-padding-small">
+                    <i class="fa fa-list"></i> Results
+                </h3>
+                <div class="w3-right w3-padding w3-text-grey w3-small">
+                    <b>Total:</b> {{ books|length }} book{{ books|length|pluralize }}
+                </div>
+                <div class="w3-clear"></div>
+                {% for book in books %}
+                    <div class="w3-card w3-margin-bottom w3-white w3-padding book-card w3-animate-bottom">
+                        <h4 class="w3-text-teal">
+                            <i class="fa fa-book-open"></i> {{ book.title }}
+                        </h4>
+                        <p><span class="w3-tag w3-blue w3-round"><b>Authors:</b> {{ book.authors }}</span></p>
+                        <div class="w3-row-padding">
+                            <div class="w3-half">
+                                <p><b>ISBN-10:</b> {{ book.isbn_10|default:"N/A" }}</p>
+                                <p><b>ISBN-13:</b> {{ book.isbn_13|default:"N/A" }}</p>
+                            </div>
+                            <div class="w3-half">
+                                <p><b>ASIN:</b> {{ book.asin|default:"N/A" }}</p>
+                                <p><b>Source:</b> {{ book.source }}</p>
+                            </div>
+                        </div>
+                        {% if book.purchase_url %}
+                            <div class="w3-section">
+                                <a href="{{ book.purchase_url }}" target="_blank" class="w3-button w3-teal w3-round-large w3-hover-green w3-large">
+                                    <i class="fa fa-shopping-cart"></i> Buy Now
+                                </a>
+                                <span class="w3-tag w3-pale-green w3-large w3-margin-left">{{ book.price }}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% endif %}
+
+    </div>
+</body>
+</html>
